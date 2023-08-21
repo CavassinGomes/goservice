@@ -14,7 +14,7 @@ public class AuthControler {
     }
 
     @GetMapping(value = "/cadastro")
-    public String signup(){
+    public String cadastro(){
         return "cadastroCliente";
     }
 }
