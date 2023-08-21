@@ -17,15 +17,15 @@ public class Agendamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull(message = "O campo do agendamento referente ao cliente não pode ser vazio")
-    @OneToMany()
+    @ManyToOne()
     @JoinColumn(nullable = false)
     private Cliente cliente;
     @NotNull(message = "O campo do agendamento referente ao prestador não pode ser vazio")
-    @OneToMany()
+    @ManyToOne()
     @JoinColumn(nullable = false)
     private Prestador prestador;
     @NotNull(message = "O campo do agendamento referente ao servico não pode ser vazio")
-    @OneToMany()
+    @ManyToOne()
     @JoinColumn(nullable = false)
     private Servico servico;
     @NotNull(message = "O status do agendamento não pode ser vazio")
