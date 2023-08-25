@@ -5,6 +5,7 @@ import com.soulcode.goserviceapp.domain.Cliente;
 import com.soulcode.goserviceapp.domain.Prestador;
 import com.soulcode.goserviceapp.domain.Usuario;
 import com.soulcode.goserviceapp.repository.UsuarioRepository;
+import com.soulcode.goserviceapp.service.exception.UsuarioNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +36,7 @@ public class UsuarioService {
         if (result.isPresent()){
             return result.get();
         }
-        throw new RuntimeException("Usuário não encontrado.");
+        throw new UsuarioNaoEncontradoException();
     }
 
     public Usuario createUser(Usuario usuario){
@@ -75,7 +76,7 @@ public class UsuarioService {
             usuarioRepository.updateEnableById(false, id);
             return;
         }
-        throw new RuntimeException("Usuário não encontrado.");
+        throw new UsuarioNaoEncontradoException();
     }
 
     @Transactional
@@ -85,6 +86,6 @@ public class UsuarioService {
             usuarioRepository.updateEnableById(true, id);
             return;
         }
-        throw new RuntimeException("Usuário não encontrado.");
+        throw new UsuarioNaoEncontradoException();
     }
 }
