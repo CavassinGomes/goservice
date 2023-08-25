@@ -27,8 +27,15 @@ public class AdministradorController {
     private ServicoService servicoService;
 
     @GetMapping(value = "/servicos")
-    public String servico() {
-        return "servicosAdmin";
+    public ModelAndView servico() {
+        ModelAndView mv = new ModelAndView("servicosAdmin");
+        try{
+            List<Servico> servicos = servicoService.findAll();
+            mv.addObject("servicos", servicos);
+        }catch (Exception ex){
+            mv.addObject("errorMessage", "Erro ao buscar dados de serviço");
+        }
+        return mv;
     }
 
     @PostMapping(value = "/servicos")
