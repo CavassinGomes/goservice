@@ -1,8 +1,12 @@
 package com.soulcode.goserviceapp.controller;
 
 import com.soulcode.goserviceapp.domain.Cliente;
+import com.soulcode.goserviceapp.domain.Usuario;
 import com.soulcode.goserviceapp.service.AuthService;
 import com.soulcode.goserviceapp.service.UsuarioService;
+import com.soulcode.goserviceapp.service.exception.SenhaIncorretaException;
+import com.soulcode.goserviceapp.service.exception.UsuarioNaoAutenticadoException;
+import com.soulcode.goserviceapp.service.exception.UsuarioNaoEncontradoException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -62,6 +66,9 @@ public class AuthController {
         try {
             authService.updatePassword(authentication, senhaAtual, senhaNova);
             attributes.addFlashAttribute("successMessage", "Senha alterada.");
+
+        }catch(UsuarioNaoEncontradoException | UsuarioNaoAutenticadoException | SenhaIncorretaException ex){
+            attributes.addFlashAttribute("errorMessage", ex.getMessage());
         } catch (Exception ex) {
             attributes.addFlashAttribute("errorMessage", "Erro ao tentar alterar a senha.");
         }
