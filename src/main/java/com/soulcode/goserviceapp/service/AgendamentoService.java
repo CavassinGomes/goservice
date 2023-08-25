@@ -84,7 +84,7 @@ public class AgendamentoService {
         throw new RuntimeException("Agendamento imutável.");
     }
 
-    public void cancelAgendaCliente(Authentication authentication, long id){
+    public void cancelAgendaCliente(Authentication authentication, Long id){
         Cliente cliente = clienteService.findAuthenticated(authentication);
         Agendamento agendamento = findById(id);
         if(agendamento.getStatusAgendamento().equals(StatusAgendamento.AGUARDANDO_CONFIRMACAO)){
