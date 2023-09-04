@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -97,11 +98,18 @@ public class PrestadorController {
     }
 
     @GetMapping(value = "/agenda")
-    public ModelAndView agenda(Authentication authentication) {
+    public ModelAndView agenda(Authentication authentication, @RequestParam(name = "dataInicial", required = false) LocalDate dataInicial,
+                               @RequestParam(name = "dataFinal", required = false) LocalDate dataFinal) {
+
         ModelAndView mv = new ModelAndView("agendaPrestador");
         try {
-            List<Agendamento> agendamentos = agendamentoService.findByPrestador(authentication);
-            mv.addObject("agendamentos", agendamentos);
+            if(dataFinal == null && dataInicial == null){
+                List<Agendamento> agendamentos = agendamentoService.findByPrestador(authentication);
+                mv.addObject("agendamentos", agendamentos);
+            }else{
+                List<Agendamento> agendamentos = agendamentoService.findAgendamentoPrestadorByData(authentication, dataInicial.toString(), dataFinal.toString());
+                mv.addObject("agendamentos", agendamentos);
+            }
         } catch (UsuarioNaoAutenticadoException | UsuarioNaoEncontradoException ex) {
             mv.addObject("errorMessage", ex.getMessage());
         } catch (Exception ex) {
@@ -143,4 +151,6 @@ public class PrestadorController {
         }
         return "redirect:/prestador/agenda";
     }
+
+
 }
