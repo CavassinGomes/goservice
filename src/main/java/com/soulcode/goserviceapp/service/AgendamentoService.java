@@ -68,6 +68,11 @@ public class AgendamentoService {
         return  agendamentoRepository.findByPrestadorEmail(prestador.getEmail());
     }
 
+    public List<Agendamento> findAgendamentoPrestadorByData(Authentication authentication, String dataInicial, String dataFinal){
+        Prestador prestador = prestadorService.findAuthenticated(authentication);
+        return agendamentoRepository.findAgendamentoByData(prestador.getEmail(), dataInicial, dataFinal);
+    }
+
     public void cancelAgendaPrestador(Authentication authentication, Long id){
         Prestador prestador = prestadorService.findAuthenticated(authentication);
         Agendamento agendamento = findById(id);
