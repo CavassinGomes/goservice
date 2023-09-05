@@ -44,6 +44,7 @@
                         <th>Status</th>
                         <th>Cancelar</th>
                         <th>Confirmar</th>
+                        <th>Chat</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -62,6 +63,18 @@
                             <button class="btn btn-primary" style="width: 8rem" th:disabled="${not agendamento.isConfirmable()}" data-bs-toggle="modal" th:data-bs-target="'#confirmModal' + ${agendamento.id}">
                                 Confirmar <i class="bi bi-check-square-fill ms-2"></i>
                             </button>
+                        </td>
+                        <td>
+                            <a th:if="${agendamento.getStatusAgendamento().getDescricao() == 'Confirmado' || agendamento.getStatusAgendamento().getDescricao() == 'Concluido'}" th:href="@{/prestador/chat/{id}(id=${agendamento?.id})}">
+                                <button class="btn btn-primary d-flex align-items-center" style="border-radius: 50%; width: 2.5rem; height: 2.5rem; padding: 0; justify-content: center; line-height: 2.5rem;">
+                                    <i  class="bi-chat-left-text-fill" style="margin: 0;"></i>
+                                </button>
+                            </a>
+                            <a th:if="${agendamento.getStatusAgendamento().getDescricao() != 'Confirmado' && agendamento.getStatusAgendamento().getDescricao() != 'Concluido'}">
+                                <button th:disabled="${not agendamento.isRealizable()}" class="btn btn-primary d-flex align-items-center" style="border-radius: 50%; width: 2.5rem; height: 2.5rem; padding: 0; justify-content: center; line-height: 2.5rem;">
+                                    <i  class="bi-chat-left-text" style="margin: 0;"></i>
+                                </button>
+                            </a>
                         </td>
                     </tr>
                     </tbody>
