@@ -98,11 +98,19 @@ public class ClienteController {
     }
 
     @GetMapping(value = "/historico")
-    public ModelAndView historico(Authentication authentication) {
+    public ModelAndView historico(Authentication authentication, @RequestParam(name = "dataInicial", required = false) LocalDate dataInicial,
+                                  @RequestParam(name = "dataFinal", required = false) LocalDate dataFinal) {
         ModelAndView mv = new ModelAndView("historicoCliente");
         try {
-            List<Agendamento> agendamentos = agendamentoService.findByCliente(authentication);
-            mv.addObject("agendamentos", agendamentos);
+            if(dataFinal == null && dataInicial == null){
+                List<Agendamento> agendamentos = agendamentoService.findByCliente(authentication);
+                mv.addObject("agendamentos", agendamentos);
+            }else{
+                List<Agendamento> agendamentos = agendamentoService.findAgendamentoClienteByData(authentication,
+                        dataInicial.toString(),
+                        dataFinal.toString());
+                mv.addObject("agendamentos", agendamentos);
+            }
         } catch (UsuarioNaoAutenticadoException | UsuarioNaoEncontradoException ex) {
             mv.addObject("errorMessage", ex.getMessage());
         } catch (Exception ex) {

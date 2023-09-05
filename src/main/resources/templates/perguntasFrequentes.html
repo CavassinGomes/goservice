@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/layout :: layout(~{::title}, ~{::#content})">
+<head>
+    <meta charset="UTF-8">
+    <title>Go Service | Perguntas Frequentes</title>
+    <link rel="stylesheet" href="../static/css/main.css">
+</head>
+
+
+<body>
+<main id="content">
+    <div th:replace="fragments/header :: header"></div>
+    <div class="faq-style">
+        <h2>
+            Perguntas Frequentes - FAQ: Frequently Asked Questions.
+        </h2>
+
+        <section class="faq-sessao">
+
+            <div class="faq-item">
+                <h3>Como faço para me cadastrar como cliente?</h3>
+                <p>Para se cadastrar como cliente em nosso site, clique no botão <b>Cadastre-se</b>
+                    preencha os campos solicitados e Aceite os Termos e Condições de Uso e Politica de Privacidade.
+                </p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Como um cliente pode alterar os dados cadastrais?</h3>
+                <p>Após realizar o login com seu usuário e senha, clique no botão <b>Cliente</b>
+                    e procure pela opção <b>Dados Cadastrais</b> para realizar as alterações desejadas.
+                </p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Como agendar um serviço?</h3>
+                <p>Agendar um serviço é simples, acesse o sistema com seu usuário e senha e procure pelo botão <b>Agendar Serviço</b>
+                    na aba da página.
+                </p>
+            </div>
+
+            <div class="faq-item">
+                <h3> Como posso redefinir minha senha?</h3>
+                <p>Após estar logado em nosso sistema, clique na sua foto e clique no botão <b>Editar Senha</b>
+                </p>
+            </div>
+
+
+            <div class="faq-item">
+                <h3>Como os prestadores de serviços podem visualizar os agendamentos de serviços ?</h3>
+                <p>Para visualizar sua agenda de serviços, acesso o sistema com seu usuário e senha</p>
+            </div>
+        </section>
+
+        <div class="text-formulario">
+            <h3>Não encontrou a resposta ? <br>Pergunte abaixo:</h3>
+            <form action="#" method="POST" id="form">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="texto">Digite sua pergunta:</label>
+                <textarea id="texto" name="texto" maxlength="350" required></textarea>
+
+                <button type="submit" id="enviar">Enviar</button>
+                <button type="reset">Limpar</button>
+            </form>
+        </div>
+
+        <div class="popup" id="popup" style="display: none;">
+            <div class="popup-conteudo">
+                <p>Obrigada pela sua pergunta, retornaremos em breve por email.</p>
+                <button id="fechar">Fechar</button>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('form');
+                const popup = document.getElementById('popup');
+                const enviarButton = document.getElementById('enviar');
+                const fecharButton = document.getElementById('fechar');
+
+                enviarButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    popup.style.display = 'flex';
+                    enviarButton.style.backgroundColor = '#0056b3';
+                });
+
+                fecharButton.addEventListener('click', function () {
+                    popup.style.display = 'none';
+                    form.reset();
+                });
+            });
+        </script>
+
+        <div class="botao-flutuante">
+            <a href="home.html">Home</a>
+        </div>
+
+</body>
+
+</html>

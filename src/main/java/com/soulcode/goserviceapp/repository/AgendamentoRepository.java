@@ -19,4 +19,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
 
     @Query(value = "SELECT a.* FROM agendamentos a JOIN usuarios u ON a.prestador_id = u.id WHERE u.email = ? and data BETWEEN ? AND ? ORDER BY data", nativeQuery = true)
     List<Agendamento> findAgendamentoByData(String email, String dataInicial, String dataFinal);
+
+    @Query(value = "SELECT a.* FROM agendamentos a JOIN usuarios u ON a.cliente_id = u.id WHERE u.email = ? and data BETWEEN ? AND ? ORDER BY data", nativeQuery = true)
+    List<Agendamento> findAgendamentoClienteByData(String email, String dataInicial, String dataFinal);
 }

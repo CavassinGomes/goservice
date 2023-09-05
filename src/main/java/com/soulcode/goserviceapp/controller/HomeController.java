@@ -19,4 +19,8 @@ public class HomeController {
         return "politicaTermos";
     }
 
+    @GetMapping(value = "/perguntasFrequentes")
+    public String perguntasfrequentes(){
+        return "perguntasFrequentes";
+    }
 }
