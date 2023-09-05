@@ -3,6 +3,7 @@ package com.soulcode.goserviceapp.domain;
 import com.soulcode.goserviceapp.domain.enums.Perfil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+
 import java.util.Objects;
 
 @Entity
