@@ -38,6 +38,10 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    public List<Usuario> countByPerfil(){
+        return usuarioRepository.countByPerfil();
+    }
+
     public Usuario findById(Long id){
         Optional<Usuario> result = usuarioRepository.findById(id);
         if (result.isPresent()){
