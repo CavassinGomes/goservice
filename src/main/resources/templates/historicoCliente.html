@@ -27,13 +27,14 @@
                         <th>Status</th>
                         <th>Cancelar</th>
                         <th>Concluir</th>
+                        <th>Chat</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="agendamento : ${agendamentos}">
                         <td th:text="${agendamento.prestador.nome}"></td>
                         <td th:text="${agendamento.servico.nome}"></td>
-                        <td th:text="${agendamento.data}"></td>
+                        <td th:text="${#temporals.format(agendamento.data, 'dd/MM/yyyy')}"></td>
                         <td th:text="${agendamento.hora}"></td>
                         <td th:text="${agendamento.statusAgendamento.descricao}"></td>
                         <td>
@@ -45,6 +46,18 @@
                             <button class="btn btn-primary" style="width: 8rem" th:disabled="${not agendamento.isRealizable()}" data-bs-toggle="modal" th:data-bs-target="'#completeModal' + ${agendamento.id}">
                                 Concluir <i class="bi bi-check-square-fill ms-2"></i>
                             </button>
+                        </td>
+                        <td>
+                            <a th:if="${agendamento.getStatusAgendamento().getDescricao() == 'Confirmado' || agendamento.getStatusAgendamento().getDescricao() == 'Concluido'}" th:href="@{/cliente/chat/{id}(id=${agendamento?.id})}">
+                                <button class="btn btn-primary d-flex align-items-center" style="border-radius: 50%; width: 2.5rem; height: 2.5rem; padding: 0; justify-content: center; line-height: 2.5rem;">
+                                    <i  class="bi-chat-left-text-fill" style="margin: 0;"></i>
+                                </button>
+                            </a>
+                            <a th:if="${agendamento.getStatusAgendamento().getDescricao() != 'Confirmado' && agendamento.getStatusAgendamento().getDescricao() != 'Concluido'}">
+                                <button th:disabled="${not agendamento.isRealizable()}" class="btn btn-primary d-flex align-items-center" style="border-radius: 50%; width: 2.5rem; height: 2.5rem; padding: 0; justify-content: center; line-height: 2.5rem;">
+                                    <i  class="bi-chat-left-text" style="margin: 0;"></i>
+                                </button>
+                            </a>
                         </td>
                     </tr>
                     </tbody>
@@ -92,7 +105,7 @@
             </div>
         </div>
     </div>
-
+    <div th:replace="fragments/footer :: footer"></div>
 </div>
 
 </body>

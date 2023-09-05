@@ -1,9 +1,11 @@
 package com.soulcode.goserviceapp.controller;
 
 import com.soulcode.goserviceapp.domain.Agendamento;
+import com.soulcode.goserviceapp.domain.Chat;
 import com.soulcode.goserviceapp.domain.Prestador;
 import com.soulcode.goserviceapp.domain.Servico;
 import com.soulcode.goserviceapp.service.AgendamentoService;
+import com.soulcode.goserviceapp.service.ChatService;
 import com.soulcode.goserviceapp.service.PrestadorService;
 import com.soulcode.goserviceapp.service.ServicoService;
 import com.soulcode.goserviceapp.service.exceptions.*;
@@ -11,14 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping(value = "/prestador")
@@ -32,6 +33,9 @@ public class PrestadorController {
 
     @Autowired
     private AgendamentoService agendamentoService;
+
+    @Autowired
+    private ChatService chatService;
 
     @GetMapping(value = "/dados")
     public ModelAndView dados(Authentication authentication) {
@@ -97,11 +101,18 @@ public class PrestadorController {
     }
 
     @GetMapping(value = "/agenda")
-    public ModelAndView agenda(Authentication authentication) {
+    public ModelAndView agenda(Authentication authentication, @RequestParam(name = "dataInicial", required = false) LocalDate dataInicial,
+                               @RequestParam(name = "dataFinal", required = false) LocalDate dataFinal) {
+
         ModelAndView mv = new ModelAndView("agendaPrestador");
         try {
-            List<Agendamento> agendamentos = agendamentoService.findByPrestador(authentication);
-            mv.addObject("agendamentos", agendamentos);
+            if(dataFinal == null && dataInicial == null){
+                List<Agendamento> agendamentos = agendamentoService.findByPrestador(authentication);
+                mv.addObject("agendamentos", agendamentos);
+            }else{
+                List<Agendamento> agendamentos = agendamentoService.findAgendamentoPrestadorByData(authentication, dataInicial.toString(), dataFinal.toString());
+                mv.addObject("agendamentos", agendamentos);
+            }
         } catch (UsuarioNaoAutenticadoException | UsuarioNaoEncontradoException ex) {
             mv.addObject("errorMessage", ex.getMessage());
         } catch (Exception ex) {
@@ -143,4 +154,41 @@ public class PrestadorController {
         }
         return "redirect:/prestador/agenda";
     }
+
+    @GetMapping(value = "/chat/{id}")
+    public ModelAndView chatCliente(@PathVariable Long id, Authentication authentication){
+        ModelAndView mv = new ModelAndView("chatPrestador");
+        try {
+            Agendamento agendamento = agendamentoService.findById(id);
+            if(Objects.equals(agendamento.getPrestador().getEmail(), authentication.getName())){
+            mv.addObject("agendamento", agendamento);
+            List<Chat> chat = chatService.findByIdAgendamento(String.valueOf(id));
+            mv.addObject("chatList", chat);
+            }
+        } catch (Exception ex) {
+            mv.addObject("errorMessage", ex.getMessage());
+        }
+        return mv;
+    }
+    @PostMapping(value = "/chat/enviar")
+    public String enviarMensagem(
+            @RequestParam(name = "mensagem") String mensagem,
+            @RequestParam(name = "agendamentoId") Long agendamentoId,
+            RedirectAttributes attributes){
+        Agendamento agendamento = agendamentoService.findById(agendamentoId);
+        try {
+            Chat chat = new Chat();
+            chat.setMensagem(mensagem);
+            chat.setRemetenteId(String.valueOf(agendamento.getCliente().getId()));
+            chat.setDestinatarioId(String.valueOf(agendamento.getPrestador().getId()));
+            chat.setAgendamentoId(String.valueOf(agendamento.getId()));
+            chat.setClasseRemetente("Prestador");
+            chatService.create(chat);
+            return "redirect:/prestador/chat/" + agendamento.getId();
+        } catch (Exception ex) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao enviar mensagem.");
+            return "redirect:/prestador/chat/" + agendamento.getId();
+        }
+    }
+
 }
