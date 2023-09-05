@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="fragments/layout :: layout(~{::title}, ~{::#content})">
+<head>
+    <title>Chat | GoService</title>
+</head>
+<body>
+
+<div id="content">
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="container mt-4 d-flex justify-content-center align-items-center flex-column">
+        <div class="d-block w-100" style="text-align: center">
+            <h2 th:text="${agendamento.servico.nome} + ' - ' + ${agendamento.cliente.nome}"></h2>
+            <h2 th:text="${#temporals.format(agendamento?.hora, 'HH:mm')} + ' - ' + ${#temporals.format(agendamento?.data, 'dd/MM/yyyy')}"></h2>
+        </div>
+        <div class="card w-50 mt-3 column" style="height: 40rem">
+            <div class="card-body">
+
+                <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success" role="alert"></div>
+                <div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger" role="alert"></div>
+
+                <div class="d-flex flex-column h-100">
+                    <div class="row w-95 h-100" style="overflow: auto ">
+                        <div class="chat col-md-12" >
+                            <div th:each="chat : ${chatList}">
+                                <div th:if="${chat?.classeRemetente} == 'Cliente'" class="d-flex flex-row">
+                                    <span class="data-mensagem text-secondary" style="font-size: 0.8rem" th:text="${#temporals.format(chat?.dataMensagem, 'HH:mm')}"></span>
+                                    <div  class="mensagem bg-light d-inline-block rounded p-2 mb-2" th:text="${chat?.mensagem}" ></div>
+                                </div>
+                                <div th:if="${chat?.classeRemetente} == 'Prestador'"  class="d-flex flex-row-reverse" >
+                                    <span class="data-mensagem text-secondary" style="font-size: 0.8rem" th:text="${#temporals.format(chat?.dataMensagem, 'HH:mm')}"></span>
+                                    <div class="mensagem bg-primary text-white d-inline-block rounded p-2 mb-2" th:text="${chat?.mensagem}" ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form method="post" th:action="@{/prestador/chat/enviar}" class="mt-auto">
+                        <div class="input-group">
+                            <input type="hidden" th:value="${agendamento.id}" id="agendamentoId" name="agendamentoId">
+                            <input type="text" class="form-control" name="mensagem" id="mensagem" th:disabled="${agendamento.getStatusAgendamento().getDescricao() == 'Concluido'}" autofocus placeholder="Digite sua mensagem">
+                            <div class="input-group-append" style="margin-left: 5px">
+                                <button class="btn btn-primary" type="submit" th:disabled="${agendamento.getStatusAgendamento().getDescricao() == 'Concluido'}">Enviar</button>
+                            </div>
+                            <a href="/prestador/agenda">
+                            <div class="input-group-append" style="margin-left: 5px">
+                                <button class="btn btn-secundary" type="button">Voltar <i class="bi bi-arrow-return-left"></i></button>
+                            </div>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

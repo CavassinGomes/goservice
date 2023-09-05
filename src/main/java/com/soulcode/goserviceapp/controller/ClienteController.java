@@ -1,27 +1,19 @@
 package com.soulcode.goserviceapp.controller;
 
-import com.soulcode.goserviceapp.domain.Agendamento;
-import com.soulcode.goserviceapp.domain.Cliente;
-import com.soulcode.goserviceapp.domain.Prestador;
-import com.soulcode.goserviceapp.domain.Servico;
-import com.soulcode.goserviceapp.service.AgendamentoService;
-import com.soulcode.goserviceapp.service.ClienteService;
-import com.soulcode.goserviceapp.service.PrestadorService;
-import com.soulcode.goserviceapp.service.ServicoService;
+import com.soulcode.goserviceapp.domain.*;
+import com.soulcode.goserviceapp.service.*;
 import com.soulcode.goserviceapp.service.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping(value = "/cliente")
@@ -38,6 +30,9 @@ public class ClienteController {
 
     @Autowired
     private AgendamentoService agendamentoService;
+
+    @Autowired
+    private ChatService chatService;
 
     @GetMapping(value = "/dados")
     public ModelAndView dados(Authentication authentication) {
@@ -148,5 +143,41 @@ public class ClienteController {
             attributes.addFlashAttribute("errorMessage", "Erro ao concluir agendamento.");
         }
         return "redirect:/cliente/historico";
+    }
+
+    @GetMapping(value = "/chat/{id}")
+    public ModelAndView chatCliente(@PathVariable Long id, Authentication authentication){
+        ModelAndView mv = new ModelAndView("chatCliente");
+        try {
+            Agendamento agendamento = agendamentoService.findById(id);
+            if(Objects.equals(agendamento.getCliente().getEmail(), authentication.getName())){
+                mv.addObject("agendamento", agendamento);
+                List<Chat> chat = chatService.findByIdAgendamento(String.valueOf(id));
+                mv.addObject("chatList", chat);
+            }
+        } catch (Exception ex) {
+            mv.addObject("errorMessage", "Autenticação inválida!");
+        }
+        return mv;
+    }
+    @PostMapping(value = "/chat/enviar")
+    public String enviarMensagem(
+            @RequestParam(name = "mensagem") String mensagem,
+            @RequestParam(name = "agendamentoId") Long agendamentoId,
+            RedirectAttributes attributes){
+        Agendamento agendamento = agendamentoService.findById(agendamentoId);
+        try {
+            Chat chat = new Chat();
+            chat.setMensagem(mensagem);
+            chat.setRemetenteId(String.valueOf(agendamento.getCliente().getId()));
+            chat.setDestinatarioId(String.valueOf(agendamento.getPrestador().getId()));
+            chat.setAgendamentoId(String.valueOf(agendamento.getId()));
+            chat.setClasseRemetente("Cliente");
+            chatService.create(chat);
+            return "redirect:/cliente/chat/" + agendamento.getId();
+        } catch (Exception ex) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao enviar mensagem.");
+            return "redirect:/cliente/chat/" + agendamento.getId();
+        }
     }
 }

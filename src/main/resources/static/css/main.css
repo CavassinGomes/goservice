@@ -3,3 +3,22 @@
     padding: 10px;
     margin: 10px;
 }
+
+.chat{
+    max-height: 35rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.mensagem{
+    max-width: 60%;
+}
+
+.chat::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
