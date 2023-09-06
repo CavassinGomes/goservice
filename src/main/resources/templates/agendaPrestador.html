@@ -49,7 +49,9 @@
                     </thead>
                     <tbody>
                     <tr th:each="agendamento : ${agendamentos}">
-                        <td th:text="${agendamento.cliente.nome}"></td>
+                        <td><button type="button" class="btn btn-link nav-link text-dark" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${agendamento.id}">
+                            <span th:text="${agendamento.cliente.nome}"></span>
+                        </button></td>
                         <td th:text="${agendamento.servico.nome}"></td>
                         <td th:text="${#temporals.format(agendamento?.data, 'dd/MM/yyyy')}"></td>
                         <td th:text="${agendamento.hora}"></td>
@@ -119,6 +121,29 @@
                         <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirmar</button>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div th:each="agendamento : ${agendamentos}" th:id="'modal-' + ${agendamento.id}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:text="'Detalhes do Agendamento de ' + ${agendamento.cliente.nome}" id="myModalLabel"></h5>
+                    <form  class="modal-none" method="post" th:action="@{/prestador/agenda}">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </form>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nome:</strong> <span th:text="${agendamento.cliente.nome}"></span></p>
+                    <p><strong>Email:</strong> <span th:text="${agendamento.cliente.email}"></span></p>
+                    <p><strong>Telefone:</strong> <span th:text="${agendamento.cliente.telefone}"></span></p>
+                    <p><strong>Data de Nascimento:</strong> <span th:text="${#temporals.format(agendamento?.cliente.dataNascimento, 'dd/MM/yyyy')}"></span></p>
+                    <p><strong>Endereço:</strong> <span th:text="${agendamento.cliente.endereco}"></span></p>
+                </div>
+                <form class="modal-footer" method="post" th:action="@{/prestador/agenda}">
+                    <input type="hidden" name="agendamentoId" th:value="${agendamento.id}">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+                </form>
             </div>
         </div>
     </div>
