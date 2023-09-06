@@ -128,20 +128,18 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" th:text="'Detalhes do Agendamento de ' + ${agendamento.prestador.nome}" id="myModalLabel"></h5>
-                    <form  class="modal-none" method="post" th:action="@{/cliente/historico/cancelar}">
+                    <form  class="modal-none" method="post" th:action="@{/cliente/historico}">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                     </form>
                 </div>
                 <div class="modal-body">
-                    <!-- Insira as informações detalhadas do agendamento aqui -->
-                    <p>Nome: <span th:text="${agendamento.prestador.nome}"></span></p>
-                    <p>Email: <span th:text="${agendamento.prestador.email}"></span></p>
-                    <p>Descrição: <span th:text="${agendamento.prestador.descricao}"></span></p>
-                    <p>Taxa de Cobrança: <span th:text="${agendamento.prestador.taxaPorHora}"></span></p>
-                    <p>Endereço: <span th:text="${agendamento.prestador.endereco}"></span></p>
-                    <!-- Adicione mais informações conforme necessário -->
+                    <p><strong>Nome:</strong> <span th:text="${agendamento.prestador.nome}"></span></p>
+                    <p><strong>Email:</strong> <span th:text="${agendamento.prestador.email}"></span></p>
+                    <p><strong>Descrição:</strong> <span th:text="${agendamento.prestador.descricao}"></span></p>
+                    <p><strong>Taxa de Cobrança:</strong> <span th:text="${agendamento.prestador.taxaPorHora}"></span></p>
+                    <p><strong>Endereço:</strong> <span th:text="${agendamento.prestador.endereco}"></span></p>
                 </div>
-                <form class="modal-footer" method="post" th:action="@{/cliente/historico/cancelar}">
+                <form class="modal-footer" method="post" th:action="@{/cliente/historico}">
                     <input type="hidden" name="agendamentoId" th:value="${agendamento.id}">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
                 </form>
