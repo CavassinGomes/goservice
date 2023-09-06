@@ -13,7 +13,7 @@
 
         <div class="card w-100 mt-5">
             <div class="card-body">
-                <h5 class="card-title mb-2">Novo usuário</h5>
+                <h2 class="card-title mb-2">Novo usuário</h2>
 
                 <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success" role="alert"></div>
                 <div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger" role="alert"></div>
@@ -52,7 +52,17 @@
 
         <div class="card w-100 mt-5">
             <div class="card-body">
-                <h5 class="card-title mb-2">Usuários cadastrados</h5>
+                <h2 class="card-title mb-4">Usuários cadastrados</h2>
+
+                <h5>Filtro de Usuarios</h5>
+                <form th:action="@{/admin/usuarios}" method="get">
+                    <div class="form-group mb-1 w-25">
+                        <label for="nomeFiltro">Nome</label>
+                        <input type="text" class="form-control" id="nomeFiltro" name="nomeFiltro">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-3">Filtrar</button>
+                </form>
+
 
                 <table class="table w-100">
                     <thead>
