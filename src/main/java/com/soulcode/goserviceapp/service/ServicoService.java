@@ -15,11 +15,16 @@ public class ServicoService {
     @Autowired
     private ServicoRepository servicoRepository;
 
-    @Cacheable(cacheNames = "redisCache")
+    @Cacheable(cacheNames = "redisCache2")
     public List<Servico> findAll(){
         System.err.println("BUSCANDO NO BANCO DE DADOS...");
         return servicoRepository.findAll();
     }
+
+    public List<Servico> findByNameServico(String nome){
+        return servicoRepository.findByNameServico(nome);
+    }
+
 
     public Servico createServico(Servico servico){
         servico.setId(null);

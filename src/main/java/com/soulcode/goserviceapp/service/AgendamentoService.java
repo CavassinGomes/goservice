@@ -7,8 +7,9 @@ import com.soulcode.goserviceapp.domain.Servico;
 import com.soulcode.goserviceapp.domain.enums.StatusAgendamento;
 import com.soulcode.goserviceapp.repository.AgendamentoRepository;
 import com.soulcode.goserviceapp.service.exceptions.AgendamentoNaoEncontradoException;
-import com.soulcode.goserviceapp.service.exceptions.DataInvalidaException;
+import com.soulcode.goserviceapp.service.exceptions.ConflitoHorarioException;
 import com.soulcode.goserviceapp.service.exceptions.StatusAgendamentoImutavelException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
@@ -120,4 +121,23 @@ public class AgendamentoService {
         }
         throw new StatusAgendamentoImutavelException();
     }
+
+    public void agendar(Agendamento novoAgendamento) {
+    }
+
+    @Service
+    public class AgendamentoConflitoService {
+        @Autowired
+        private AgendamentoRepository agendamentoRepository;
+
+        public void agendar(Agendamento novoAgendamento) {
+            List<Agendamento> agendamentosConflitantes = agendamentoRepository.findByPrestadorAndData(novoAgendamento.getPrestador(), novoAgendamento.getData());
+
+            if (!agendamentosConflitantes.isEmpty()) {
+                throw new ConflitoHorarioException("Este horário já esta agendado!");
+            }
+            agendamentoRepository.save(novoAgendamento);
+        }
+    }
+
 }

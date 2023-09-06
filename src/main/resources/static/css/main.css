@@ -166,7 +166,7 @@ button[type="submit"]:hover {
     background-color: rgb(221, 234, 245);}
 
 
- .botao-flutuante {
+.botao-flutuante {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -319,7 +319,7 @@ button[type="submit"]:hover {
     background-color: rgb(221, 234, 245);}
 
 
- .botao-flutuante {
+.botao-flutuante {
     position: fixed;
     bottom: 20px;
     right: 20px;
