@@ -13,7 +13,7 @@
 
         <div class="card w-100 mt-5">
             <div class="card-body">
-                <h5 class="card-title mb-2">Novo serviço</h5>
+                <h2 class="card-title mb-2">Novo serviço</h2>
 
                 <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success" role="alert"></div>
                 <div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger" role="alert"></div>
@@ -52,7 +52,17 @@
 
         <div class="card w-100 mt-5">
             <div class="card-body">
-                <h5 class="card-title mb-2">Serviços cadastrados</h5>
+                <h2 class="card-title mb-2">Serviços cadastrados</h2>
+
+                <h5>Filtro de Serviços</h5>
+                <form th:action="@{/admin/servicos}" method="get">
+                    <div class="form-group mb-1 w-25">
+                        <label for="servicoFiltro">Nome</label>
+                        <input type="text" class="form-control" id="servicoFiltro" name="servicoFiltro">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-3">Filtrar</button>
+                </form>
+
 
                 <table class="table w-100">
                     <thead>
