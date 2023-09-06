@@ -24,4 +24,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query(value = "SELECT perfil, COUNT(perfil) FROM usuarios GROUP BY perfil", nativeQuery = true)
     public List<Usuario> countByPerfil();
+
+    @Query(value = "SELECT endereco_id FROM usuarios WHERE id = ?", nativeQuery = true)
+    Long findIdEndByIdUsu(Long id);
+
 }

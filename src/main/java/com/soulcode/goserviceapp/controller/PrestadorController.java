@@ -1,13 +1,7 @@
 package com.soulcode.goserviceapp.controller;
 
-import com.soulcode.goserviceapp.domain.Agendamento;
-import com.soulcode.goserviceapp.domain.Chat;
-import com.soulcode.goserviceapp.domain.Prestador;
-import com.soulcode.goserviceapp.domain.Servico;
-import com.soulcode.goserviceapp.service.AgendamentoService;
-import com.soulcode.goserviceapp.service.ChatService;
-import com.soulcode.goserviceapp.service.PrestadorService;
-import com.soulcode.goserviceapp.service.ServicoService;
+import com.soulcode.goserviceapp.domain.*;
+import com.soulcode.goserviceapp.service.*;
 import com.soulcode.goserviceapp.service.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -35,6 +29,9 @@ public class PrestadorController {
     private AgendamentoService agendamentoService;
 
     @Autowired
+    private EnderecoService enderecoService;
+
+    @Autowired
     private ChatService chatService;
 
     @GetMapping(value = "/dados")
@@ -43,6 +40,7 @@ public class PrestadorController {
         try {
             Prestador prestador = prestadorService.findAuthenticated(authentication);
             mv.addObject("prestador", prestador);
+            mv.addObject("endereco", prestador.getEndereco());
             List<Servico> especialidades = servicoService.findByPrestadorEmail(authentication.getName());
             mv.addObject("especialidades", especialidades);
             List<Servico> servicos = servicoService.findAll();
@@ -58,6 +56,7 @@ public class PrestadorController {
     @PostMapping(value = "/dados")
     public String editarDados(Prestador prestador, RedirectAttributes attributes) {
         try {
+
             prestadorService.update(prestador);
             attributes.addFlashAttribute("successMessage", "Dados alterados.");
         } catch (UsuarioNaoEncontradoException ex) {
@@ -100,6 +99,20 @@ public class PrestadorController {
         return "redirect:/prestador/dados";
     }
 
+    @PostMapping(value = "/dados/endereco")
+    public String alterarEndereco(
+            Endereco endereco,
+            RedirectAttributes attributes) {
+        try {
+            enderecoService.updateEndereco(endereco);
+            attributes.addFlashAttribute("successMessage", "Dados de endereço alterados.");
+        } catch (UsuarioNaoEncontradoException ex) {
+            attributes.addFlashAttribute("errorMessage", ex.getMessage());
+        } catch (Exception ex) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao alterar dados de endereço.");
+        }
+        return "redirect:/prestador/dados";
+    }
     @GetMapping(value = "/agenda")
     public ModelAndView agenda(Authentication authentication, @RequestParam(name = "dataInicial", required = false) LocalDate dataInicial,
                                @RequestParam(name = "dataFinal", required = false) LocalDate dataFinal) {
