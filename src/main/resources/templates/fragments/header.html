@@ -5,6 +5,17 @@
                 <h1><img src="../../assets/img/logos/2.png" alt="logo" width="60">GoService</h1>
             </a>
 
+            <div class="form-check form-switch mx-4">
+                <input
+                        class="form-check-input p-2"
+                        type="checkbox"
+                        role="switch"
+                        id="flexSwitchCheck"
+                        onclick="toggleTheme()"
+                />
+            </div>
+
+
             <ul class="nav flex-grow-1 mb-2 mb-md-0">
                 <!-- ADM -->
                 <div class="dropdown me-3" th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}">

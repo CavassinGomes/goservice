@@ -18,5 +18,3 @@ document.getElementById("hora").addEventListener("change", validarHorario);
 var chat = document.querySelector('.chat');
 
 chat.scrollTop = chat.scrollHeight;
-
-
