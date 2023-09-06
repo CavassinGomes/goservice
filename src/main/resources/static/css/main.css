@@ -67,7 +67,7 @@ textarea {
     width: 100%;
     padding: 8px;
     margin-bottom: 15px;
-    border: 1px solid rgb(221, 234, 245)
+    border: 1px solid rgb(221, 234, 245);
     border-radius: 5px;
 }
 
@@ -166,7 +166,7 @@ button[type="submit"]:hover {
     background-color: rgb(221, 234, 245);}
 
 
- .botao-flutuante {
+.botao-flutuante {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -220,7 +220,7 @@ textarea {
     width: 100%;
     padding: 8px;
     margin-bottom: 15px;
-    border: 1px solid rgb(221, 234, 245)
+    border: 1px solid rgb(221, 234, 245);
     border-radius: 5px;
 }
 
@@ -319,7 +319,7 @@ button[type="submit"]:hover {
     background-color: rgb(221, 234, 245);}
 
 
- .botao-flutuante {
+.botao-flutuante {
     position: fixed;
     bottom: 20px;
     right: 20px;
