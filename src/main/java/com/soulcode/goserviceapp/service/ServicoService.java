@@ -1,6 +1,7 @@
 package com.soulcode.goserviceapp.service;
 
 import com.soulcode.goserviceapp.domain.Servico;
+import com.soulcode.goserviceapp.domain.Usuario;
 import com.soulcode.goserviceapp.repository.ServicoRepository;
 import com.soulcode.goserviceapp.service.exceptions.ServicoNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class ServicoService {
     @Autowired
     private ServicoRepository servicoRepository;
 
-    @Cacheable(cacheNames = "redisCache")
+    @Cacheable(cacheNames = "redisCache2")
     public List<Servico> findAll(){
         System.err.println("BUSCANDO NO BANCO DE DADOS...");
         return servicoRepository.findAll();
@@ -37,6 +38,10 @@ public class ServicoService {
         } else {
             throw new ServicoNaoEncontradoException();
         }
+    }
+
+    public List<Servico> findByNameServico(String nome){
+        return servicoRepository.findByNameServico(nome);
     }
 
     public Servico update(Servico servico){

@@ -31,11 +31,19 @@ public class AdministradorController {
     private UsuarioLogService usuarioLogService;
 
     @GetMapping(value = "/servicos")
-    public ModelAndView servicos() {
+    public ModelAndView servicos(@RequestParam(name = "servicoFiltro", required = false)String nome) {
         ModelAndView mv = new ModelAndView("servicosAdmin");
         try {
-            List<Servico> servicos = servicoService.findAll();
-            mv.addObject("servicos", servicos);
+            if(nome == null){
+                List<Servico> servicos = servicoService.findAll();
+                mv.addObject("servicos", servicos);
+            } else {
+                String like = "%";
+                nome = like + nome + like;
+                List<Servico> servicos = servicoService.findByNameServico(nome);
+                mv.addObject("servicos", servicos);
+            }
+
         } catch (Exception ex) {
             mv.addObject("errorMessage", "Erro ao buscar dados de serviços.");
         }
