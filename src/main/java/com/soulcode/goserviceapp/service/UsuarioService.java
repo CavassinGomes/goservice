@@ -49,6 +49,10 @@ public class UsuarioService {
         return usuarioRepository.countByPerfil();
     }
 
+    public List<Usuario> findByName(String nome){
+        return usuarioRepository.findByName(nome);
+    }
+
     public Usuario findById(Long id){
         Optional<Usuario> result = usuarioRepository.findById(id);
         if (result.isPresent()){
