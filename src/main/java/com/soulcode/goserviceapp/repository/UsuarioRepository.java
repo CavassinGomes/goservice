@@ -27,4 +27,4 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query(value = "SELECT * FROM usuarios WHERE nome LIKE ?", nativeQuery = true)
     public List<Usuario> findByName(String nome);
-}
+
