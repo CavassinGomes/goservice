@@ -23,24 +23,20 @@ public class Prestador extends Usuario{
     )
     private List<Servico> especialidades;
 
-    @ManyToOne
-    private Endereco endereco;
-
     public Prestador(){
         super();
         setPerfil(Perfil.PRESTADOR);
     }
 
-    public Prestador(Long id, String nome, String email, String senha, Perfil perfil, Boolean habilitado) {
-        super(id, nome, email, senha, perfil, habilitado);
+    public Prestador(Long id, String nome, String email, String senha, Perfil perfil, Boolean habilitado, Endereco endereco) {
+        super(id, nome, email, senha, perfil, habilitado, endereco);
     }
 
     public Prestador(Long id, String nome, String email, String senha, Perfil perfil, Boolean habilitado, String descricao, Float taxaPorHora, List<Servico> especialidades, Endereco endereco) {
-        super(id, nome, email, senha, perfil, habilitado);
+        super(id, nome, email, senha, perfil, habilitado, endereco);
         this.descricao = descricao;
         this.taxaPorHora = taxaPorHora;
         this.especialidades = especialidades;
-        this.endereco = endereco;
     }
 
     public String getDescricao() {
@@ -67,13 +63,6 @@ public class Prestador extends Usuario{
         this.especialidades = especialidades;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
 
     public void addEspecialidade(Servico servico){
         if(especialidades == null){
@@ -96,8 +85,8 @@ public class Prestador extends Usuario{
         Prestador prestador = (Prestador) o;
         return Objects.equals(descricao, prestador.descricao)&&
                 Objects.equals(taxaPorHora, prestador.taxaPorHora) &&
-                Objects.equals(especialidades, prestador.especialidades)&&
-                Objects.equals(endereco, prestador.endereco);
+                Objects.equals(especialidades, prestador.especialidades);
+
     }
     @Override
     public int hashCode() {

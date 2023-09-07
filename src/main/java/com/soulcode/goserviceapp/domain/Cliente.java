@@ -12,9 +12,6 @@ import java.util.Objects;
 public class Cliente extends Usuario{
     private String telefone;
 
-    @ManyToOne
-    private Endereco endereco;
-
     @Column(length = 14)
     private String cpf;
 
@@ -25,15 +22,14 @@ public class Cliente extends Usuario{
         setPerfil(Perfil.CLIENTE);
     }
 
-    public Cliente(String telefone, Endereco endereco, String cpf, LocalDate dataNascimento) {
+    public Cliente(String telefone, String cpf, LocalDate dataNascimento) {
         this.telefone = telefone;
-        this.endereco = endereco;
         this.cpf = cpf;
         this.dataNascimento = dataNascimento;
     }
 
-    public Cliente(Long id, String nome, String email, String senha, Perfil perfil, Boolean habilitado) {
-        super(id, nome, email, senha, perfil, habilitado);
+    public Cliente(Long id, String nome, String email, String senha, Perfil perfil, Boolean habilitado, Endereco endereco) {
+        super(id, nome, email, senha, perfil, habilitado, endereco);
     }
 
     public String getTelefone() {
@@ -60,14 +56,6 @@ public class Cliente extends Usuario{
         this.dataNascimento = dataNascimento;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,8 +63,7 @@ public class Cliente extends Usuario{
         Cliente cliente = (Cliente) o;
         return Objects.equals(telefone, cliente.telefone) &&
                 Objects.equals(cpf, cliente.cpf) &&
-                Objects.equals(dataNascimento, cliente.dataNascimento)&&
-                Objects.equals(endereco, cliente.endereco);
+                Objects.equals(dataNascimento, cliente.dataNascimento);
     }
 
     @Override

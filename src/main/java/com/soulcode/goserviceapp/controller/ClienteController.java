@@ -1,6 +1,7 @@
 package com.soulcode.goserviceapp.controller;
 
 import com.soulcode.goserviceapp.domain.*;
+import com.soulcode.goserviceapp.repository.EnderecoRepository;
 import com.soulcode.goserviceapp.service.*;
 import com.soulcode.goserviceapp.service.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,20 @@ public class ClienteController {
     @Autowired
     private ChatService chatService;
 
+    @Autowired
+    private EnderecoService enderecoService;
+
+    @Autowired
+    private EnderecoRepository enderecoRepository;
+
     @GetMapping(value = "/dados")
     public ModelAndView dados(Authentication authentication) {
         ModelAndView mv = new ModelAndView("dadosCliente");
         try {
             Cliente cliente = clienteService.findAuthenticated(authentication);
             mv.addObject("cliente", cliente);
+            mv.addObject("endereco", cliente.getEndereco());
+            System.err.print(cliente.getEndereco());
         } catch (UsuarioNaoAutenticadoException | UsuarioNaoEncontradoException ex) {
             mv.addObject("errorMessage", ex.getMessage());
         } catch (Exception ex) {
@@ -57,6 +66,19 @@ public class ClienteController {
             attributes.addFlashAttribute("errorMessage", ex.getMessage());
         } catch (Exception ex) {
             attributes.addFlashAttribute("errorMessage", "Erro ao alterar dados cadastrais.");
+        }
+        return "redirect:/cliente/dados";
+    }
+
+    @PostMapping(value = "/dados/endereco")
+    public String alterarEndereco( Endereco endereco, RedirectAttributes attributes) {
+        try {
+            enderecoService.updateEndereco(endereco);
+            attributes.addFlashAttribute("successMessage", "Dados de endereço alterados.");
+        } catch (UsuarioNaoEncontradoException ex) {
+            attributes.addFlashAttribute("errorMessage", ex.getMessage());
+        } catch (Exception ex) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao alterar dados de endereço.");
         }
         return "redirect:/cliente/dados";
     }

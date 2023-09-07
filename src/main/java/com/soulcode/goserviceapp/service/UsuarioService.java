@@ -5,6 +5,7 @@ import com.soulcode.goserviceapp.domain.Cliente;
 import com.soulcode.goserviceapp.domain.Prestador;
 import com.soulcode.goserviceapp.domain.Usuario;
 import com.soulcode.goserviceapp.repository.UsuarioRepository;
+import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoAutenticadoException;
 import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,6 +38,19 @@ public class UsuarioService {
             return usuario.get();
         }
         throw new UsuarioNaoEncontradoException();
+    }
+
+    public Usuario findAuthenticated(Authentication authentication){
+        if (authentication != null && authentication.isAuthenticated()){
+            Optional<Usuario> usuario = usuarioRepository.findByEmail(authentication.getName());
+            if(usuario.isPresent()){
+                return usuario.get();
+            } else {
+                throw new UsuarioNaoEncontradoException();
+            }
+        } else {
+            throw new UsuarioNaoAutenticadoException();
+        }
     }
 
     @Cacheable(cacheNames = "redisCache")
@@ -77,17 +91,17 @@ public class UsuarioService {
     }
 
     private Administrador createAndSaveAdministrador(Usuario u){
-        Administrador admin = new Administrador(u.getId(), u.getNome(), u.getEmail(), u.getSenha(), u.getPerfil(), u.getHabilitado());
+        Administrador admin = new Administrador(u.getId(), u.getNome(), u.getEmail(), u.getSenha(), u.getPerfil(), u.getHabilitado(), u.getEndereco());
         return usuarioRepository.save(admin);
     }
 
     private Prestador createAndSavePrestador(Usuario u) {
-        Prestador prestador = new Prestador(u.getId(), u.getNome(), u.getEmail(), u.getSenha(), u.getPerfil(), u.getHabilitado());
+        Prestador prestador = new Prestador(u.getId(), u.getNome(), u.getEmail(), u.getSenha(), u.getPerfil(), u.getHabilitado(), u.getEndereco());
         return usuarioRepository.save(prestador);
     }
 
     private Cliente createAndSaveCliente(Usuario u) {
-        Cliente cliente = new Cliente(u.getId(), u.getNome(), u.getEmail(), u.getSenha(), u.getPerfil(), u.getHabilitado());
+        Cliente cliente = new Cliente(u.getId(), u.getNome(), u.getEmail(), u.getSenha(), u.getPerfil(), u.getHabilitado(), u.getEndereco());
         return usuarioRepository.save(cliente);
     }
 

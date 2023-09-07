@@ -49,8 +49,44 @@
                     <button type="submit" class="btn btn-primary">Salvar <i class="bi bi-save2 ms-2"></i></button>
                 </form>
             </div>
+
+            <div class="container my-4">
+                <div class="card w-100 mt-5">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2">Alterar endereço</h5>
+                        <form method="post" th:action="@{/cliente/dados/endereco}">
+                            <input type="hidden" name="id" th:field="*{endereco.id}">
+                            <div class="mb-3">
+                                <label for="numero" class="form-label">Número da casa<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="numero" name="numero" th:field="*{endereco.numero}">
+                                <div class="form-text"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cidade" class="form-label">Cidade</label>
+                                <input type="text" class="form-control" id="cidade" name="cidade" th:field="*{endereco.cidade}">
+                                <div class="form-text"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="logradouro" class="form-label">Logradouro</label>
+                                <input type="text" class="form-control" id="logradouro" name="logradouro" th:field="*{endereco.logradouro}">
+                                <div class="form-text"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="uf" class="form-label">UF</label>
+                                <input type="text" class="form-control" id="uf" name="uf" th:field="*{endereco.uf}">
+                                <div class="form-text"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salvar <i class="bi bi-save2 ms-2"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+
+
+
     <div th:replace="fragments/footer :: footer"></div>
 </div>
 

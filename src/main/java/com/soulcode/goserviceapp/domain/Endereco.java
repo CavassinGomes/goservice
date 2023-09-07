@@ -1,19 +1,23 @@
 package com.soulcode.goserviceapp.domain;
 
-import com.soulcode.goserviceapp.domain.enums.Perfil;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Endereco extends Usuario{
+@Table (name = "enderecos")
+public class Endereco implements Serializable{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(length = 100)
     private String logradouro;
 
     @Column
-    private String numero;
+    private Integer numero;
 
     @Column(length = 100)
     private String cidade;
@@ -22,17 +26,24 @@ public class Endereco extends Usuario{
     private String uf;
 
     public Endereco() {
-        super();
+
     }
 
-    public Endereco(Long id, String nome, String email, String senha, Perfil perfil, Boolean habilitado, String logradouro, String numero, String cidade, String uf) {
-        super(id, nome, email, senha, perfil, habilitado);
+    public Endereco(Long id, String logradouro, Integer numero, String cidade, String uf) {
+        this.id = id;
         this.logradouro = logradouro;
         this.numero = numero;
         this.cidade = cidade;
         this.uf = uf;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getLogradouro() {
         return logradouro;
@@ -42,11 +53,11 @@ public class Endereco extends Usuario{
         this.logradouro = logradouro;
     }
 
-    public String getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 
@@ -71,14 +82,15 @@ public class Endereco extends Usuario{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Endereco endereco = (Endereco) o;
-        return  Objects.equals(logradouro, endereco.logradouro) &&
-                Objects.equals(cidade, endereco.cidade) &&
+        return  Objects.equals(id, endereco.id) &&
+                Objects.equals(logradouro, endereco.logradouro) &&
                 Objects.equals(numero, endereco.numero) &&
+                Objects.equals(cidade, endereco.cidade) &&
                 Objects.equals(uf, endereco.uf);
     }
-
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getLogradouro(), getNumero(), getCidade(), getUf());
+        return Objects.hash(id,logradouro, numero, cidade, uf);
     }
+
 }
