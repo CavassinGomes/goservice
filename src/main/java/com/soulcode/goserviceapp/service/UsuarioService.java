@@ -8,6 +8,7 @@ import com.soulcode.goserviceapp.repository.UsuarioRepository;
 import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoAutenticadoException;
 import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ClienteService clienteService;
 
     public Usuario findByEmail(String email){
         Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
@@ -49,13 +53,18 @@ public class UsuarioService {
         }
     }
 
-
+    @Cacheable(cacheNames = "redisCache")
     public List<Usuario> findAll(){
+        System.err.println("BUSCANDO USUARIOS NO BANCO...");
         return usuarioRepository.findAll();
     }
 
     public List<Usuario> countByPerfil(){
         return usuarioRepository.countByPerfil();
+    }
+
+    public List<Usuario> findByName(String nome){
+        return usuarioRepository.findByName(nome);
     }
 
     public Usuario findById(Long id){

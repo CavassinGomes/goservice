@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.imageio.plugins.tiff.TIFFField;
 import java.util.List;
 
 @Controller
@@ -30,16 +31,25 @@ public class AdministradorController {
     private UsuarioLogService usuarioLogService;
 
     @GetMapping(value = "/servicos")
-    public ModelAndView servicos() {
+    public ModelAndView servicos(@RequestParam(name = "servicoFiltro", required = false)String nome) {
         ModelAndView mv = new ModelAndView("servicosAdmin");
         try {
-            List<Servico> servicos = servicoService.findAll();
-            mv.addObject("servicos", servicos);
+            if(nome == null){
+                List<Servico> servicos = servicoService.findAll();
+                mv.addObject("servicos", servicos);
+            } else {
+                String like = "%";
+                nome = like + nome + like;
+                List<Servico> servicos = servicoService.findByNameServico(nome);
+                mv.addObject("servicos", servicos);
+            }
+
         } catch (Exception ex) {
             mv.addObject("errorMessage", "Erro ao buscar dados de serviços.");
         }
         return mv;
     }
+
 
     @PostMapping(value = "/servicos")
     public String createService(Servico servico, RedirectAttributes attributes) {
@@ -91,11 +101,18 @@ public class AdministradorController {
     }
 
     @GetMapping(value = "/usuarios")
-    public ModelAndView usuarios() {
+    public ModelAndView usuarios(@RequestParam(name = "nomeFiltro", required = false) String nome) {
         ModelAndView mv = new ModelAndView("usuariosAdmin");
         try {
-            List<Usuario> usuarios = usuarioService.findAll();
-            mv.addObject("usuarios", usuarios);
+            if(nome == null){
+                List<Usuario> usuarios = usuarioService.findAll();
+                mv.addObject("usuarios", usuarios);
+            } else {
+                String like = "%";
+                nome = like + nome + like;
+                List<Usuario> usuarios = usuarioService.findByName(nome);
+                mv.addObject("usuarios", usuarios);
+            }
         } catch (Exception ex) {
             mv.addObject("errorMessage", "Erro ao buscar dados de usuários.");
         }
